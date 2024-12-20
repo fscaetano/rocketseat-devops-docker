@@ -3,6 +3,9 @@ version: '3.7'
 services:
   mysql: 
     image: mysql:8
+    container_name: mysql
+    volumes:
+      - db:/var/lib/mysql
     ports:
       - 3306:3306
     environment:
@@ -10,3 +13,26 @@ services:
       - MYSQL_DATABASE=rocketseat
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=root
+    networks:
+      - fafa
+
+  api-docker:
+    image: api-docker:v7
+    container_name: api-docker
+    build:
+      context: .
+    ports:
+      - 3001:3000
+    depends_on:
+      - mysql
+    networks:
+      - fafa
+
+networks:
+  fafa:
+    name: fafa
+    driver: bridge
+    external: True
+
+volumes:
+  db:
